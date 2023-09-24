@@ -1,0 +1,205 @@
+import turtle
+import math
+class solarsystem:
+   def __init__(self, width, height):
+     self.thesun = None
+     self.planets = []
+     self.ssturtle = turtle.Turtle()
+     self.ssturtle.hideturtle()
+     self.ssscreen = turtle.screen()
+     self.ssscreen.setworldcoordintates(-width/2.0, -height/2.0, width/2.0, height/2.0)
+     self.ssscreen.tracer(50)
+
+   def addplanet(self, aplanet):
+      self.planets.append(aplanet)
+
+   def addsun(self, asun):
+      self.thesun = asun
+    
+   def showplanet(self):
+      for aplanet in self.planets:
+         print(aplanet)
+  
+   def freeze(self):
+    self.ssscreen.exitonclick()
+
+   def moveplanets(self):
+       g = .1
+       dt = .001
+
+       for p in self.planets:
+          p.moveTo(p.getxpos() + dt * p.getxvel() , p.getypos() + dt *p.getyvel())
+
+
+          rx = self.thesun.getxpos() - p.getxpos()
+          ry = self.thesun.getypos() - p.getypos()
+          r = math.sqrt(rx**2 + ry**2)
+
+          accx = g * self.thesun.getmass()*rx/r**3
+          accy = g * self.thesun.getmass()*ry/r**3
+
+          p.setxvel(p.getxvel() + dt * accx)
+
+          p.setyvel(p.getyvel() + dt * accy)
+
+class sun:
+   def __init__(self, iname, irad, im, itemp):
+      self.name = iname
+      self.radius = irad
+      self.mass = im
+      self.temp = itemp
+      self.x = 0
+      self.y = 0
+
+
+      self.sturtle = turtle.turtle()
+      self.sturtle.shape("circle")
+      self.sturtle.color("yellow")
+
+   def getname(self):
+      return self.name
+   
+   def getradius(self):
+      return self.radius
+   
+   def getmass(self):
+      return self.mass
+   
+   def gettemperture(self):
+      return self.temp
+   
+   def getvolume(self):
+      v = 4.0/3 * math.pi * self.radius**3
+      return v
+   
+   def getsurfacearea(self):
+      sa = 4.0 *math.pi * self.radius**2
+      return sa
+   
+   def getdestiny(self):
+      d = self.mass / self.getvolume()
+      return d
+   
+   def setname(self , newname):
+      self.name = newname
+
+   def __str__(self):
+      return self.name
+   
+   def getxpos(self):
+      return self.x
+   
+   def getypos(self):
+      return self.y
+   
+class planet:
+   
+   def __init__(self, iname, irad, im, idist, ivx, ivy, ic):
+      self.name = iname
+      self.radius = irad
+      self.mass = im
+      self.distance = idist
+      self.x = idist
+      self.y = 0
+      self.velx = ivx
+      self.vely = ivy
+      self.color = ic
+
+      self.pturtle = turtle.Turtle()
+      self.pturtle.up()
+      self.pturtle.color(self.color)
+      self.pturtle.shape("circle")
+      self.pturtle.goto(self.x, self.y)
+      self.pturtle.down() 
+
+   def getname(self):
+      return self.name
+   
+   def getradius(self):
+      return self.radius
+   
+   def getmass(self):
+      return self.mass
+   
+   def getdistance(self):
+      return self.distance
+   
+   def getvolume(self):
+      v = 4.0/3 * math.pi * self.radius**3
+      return v
+   
+   def getsurfacearea(self):
+      sa = 4.0 * math.pi * self.radius**2
+      return sa
+   
+   def getdestiny(self):
+      d = self.mass / self.getvolume()
+      return d
+   
+   def setname(self, newname):
+      self.name = newname
+
+   def show(self):
+      print(self.name)
+
+   def __str__(self):
+      return self.name
+   
+   def moveto(self, newx, newy):
+      self.x = newx
+      self.y = newy
+      self.pturtle.goto(newx, newy)
+
+   def getxpos(self):
+      return self.x
+
+   def getypos(self):
+      return self.y
+
+   def getxvel(self):
+      return self.velx
+
+   def getyvel(self):
+      return self.vely
+
+   def setxvel(self, newx):
+      self.velx= newx 
+
+   def setyvel(self, newy):
+       self.vely = newy
+
+   def createssandanimate():
+      ss = solarsystem(2,2)
+      
+
+      sun = sun("sun", 5000, 10, 5800)
+      ss.addsun(sun)
+
+
+      m = planet("MERCURY", 19.5, 1000, .25, 0, 2, "blue")
+      ss.addplanet(m)
+
+      m = planet("EARTH", 47.5, 5000, 0.3, 0, 2.0, "green")
+      ss.addplanet(m)
+
+
+      m = planet("MARS", 50, 9000, 0.5, 0, 1.63, "red")
+      ss.addplanet(m)
+
+      m = planet("JUPITER", 100, 49000, 0.7, 0, 1,"black")
+      ss.addplanet(m)
+
+      m = planet("PLUTO", 1, 500, 0.9, 0, .5, "orange")
+      ss.addplanet(m)
+
+      m = planet("asteroid", 1, 500, 1.0, 0, .75, "cyan")
+      ss.addplanet(m)
+
+
+      numtimeperiod = 20000
+      for amove in range(numtimeperiod):
+         ss.moveplanets()
+
+      ss.freeze()
+    
+   createssandanimate()
